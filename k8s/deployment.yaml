@@ -1,5 +1,3 @@
-# Deloyment do MongoDB
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -23,66 +21,58 @@ spec:
               value: mongouser
             - name: MONGO_INITDB_ROOT_PASSWORD
               value: mongopwd
-
 ---
-# Deployment do Service mongodb
-
 apiVersion: v1
 kind: Service
-metadata: 
-  name: mongodb
+metadata:
+  name: mongodb-service
 spec:
   selector:
     app: mongodb
   ports:
-  - port: 27017
+    - port: 27017
+      targetPort: 27017
   type: ClusterIP
-
 ---
-#Deploymetn da Aplicação Web Rotten-Potatoes
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web
+  name: movies
 spec:
   selector:
     matchLabels:
-      app: web
+      app: movies
   template:
     metadata:
       labels:
-        app: web
+        app: movies
     spec:
       containers:
-      - name: web
-        image: edsonerg/rotten-potatoes:v1
+      - name: movies
+        image: fabricioveronez/rotten-potatoes:v1
         ports:
-        - containerPort: 80
+          - containerPort: 5000
         env:
-        - name: MONGODB_DB 
-          value: "admin"
-        - name: MONGODB_HOST
-          value: "mongodb"
-        - name: MMONGODB_PORT
-          value: "27017"
-        - name: MONGODB_USERNAME
-          value: "mongouser"
-        - name: MONGODB_PASSWORD
-          value: "mongopwd"
-
+          - name: MONGODB_DB
+            value: admin
+          - name: MONGODB_HOST
+            value: mongodb-service  
+          - name: MONGODB_PORT
+            value: "27017"
+          - name: MONGODB_USERNAME
+            value: mongouser
+          - name: MONGODB_PASSWORD
+            value: mongopwd
 ---
-# Deployment do Service da Aplicação
-
 apiVersion: v1
 kind: Service
-metadata: 
-  name: web
+metadata:
+  name: movies
 spec:
   selector:
-    app: web
+    app: movies
   ports:
   - port: 80
-    targetPort: 80
+    targetPort: 5000
     nodePort: 30000
-  type: NodePort
+  type: LoadBalancer
