@@ -35,6 +35,6 @@ jobs:
           context: ./src
           file: ./src/Dockerfile
           push: true
-          tags: 
+          tags: |
             edsonerg/rotten-potatoes:latest
             edsonerg/rotten-potatoes:${{ github.run_number }}
