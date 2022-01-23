@@ -36,5 +36,5 @@ jobs:
           file: ./src/Dockerfile
           push: true
           tags: 
-            edsonerg/rotten-otatoes:latest
-            edsonerg/rotten-otatoes:${{ github.run_number }}
+            edsonerg/rotten-potatoes:latest
+            edsonerg/rotten-potatoes:${{ github.run_number }}
